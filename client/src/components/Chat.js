@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LogOut, Users, MessageSquare, Bot, Download } from 'lucide-react';
+import { LogOut, Users, MessageSquare, Bot, Download, Sun, Moon, Circle } from 'lucide-react';
 import ChannelChat from './ChannelChat';
 import UserList from './UserList';
 import PrivateChat from './PrivateChat';
@@ -21,6 +21,7 @@ const Chat = ({ user, socket, onLogout }) => {
   const [showPollNotification, setShowPollNotification] = useState(false);
   const [lastPollResult, setLastPollResult] = useState(null);
   const [botPollSubmitted, setBotPollSubmitted] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('ircTheme') || 'default');
 
   const messagesEndRef = useRef(null);
 
@@ -303,8 +304,25 @@ const Chat = ({ user, socket, onLogout }) => {
     }
   };
 
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('ircTheme', newTheme);
+  };
+
+  useEffect(() => {
+    document.body.classList.remove('theme-bw', 'theme-red', 'theme-dark');
+    document.body.classList.add(`theme-${theme}`);
+  }, [theme]);
+
+  // Icone tema piene e visibili
+  const ThemeIcon = ({ color, border, title }) => (
+    <svg width="22" height="22" viewBox="0 0 22 22" title={title} style={{ display: 'block' }}>
+      <circle cx="11" cy="11" r="10" fill={color} stroke={border} strokeWidth="2" />
+    </svg>
+  );
+
   return (
-    <div className="chat-container">
+    <div className={`chat-container theme-${theme}`}>
       {/* Header */}
       <div className="chat-header">
         <div className="user-info">
@@ -341,6 +359,19 @@ const Chat = ({ user, socket, onLogout }) => {
           >
             <LogOut size={20} />
           </button>
+          
+          {/* Selettore tema */}
+          <div className="theme-selector">
+            <button className={`theme-btn${theme==='bw' ? ' active' : ''}`} onClick={() => handleThemeChange('bw')} title="Black & White">
+              <ThemeIcon color="#111" border="#fff" title="Black & White" />
+            </button>
+            <button className={`theme-btn${theme==='red' ? ' active' : ''}`} onClick={() => handleThemeChange('red')} title="Red & White">
+              <ThemeIcon color="#e53935" border="#fff" title="Red & White" />
+            </button>
+            <button className={`theme-btn${theme==='dark' ? ' active' : ''}`} onClick={() => handleThemeChange('dark')} title="Dark Red/Blue">
+              <ThemeIcon color="#23263a" border="#e53935" title="Dark Red/Blue" />
+            </button>
+          </div>
         </div>
       </div>
 

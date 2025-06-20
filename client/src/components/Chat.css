@@ -259,4 +259,135 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* Theme selector styles */
+.theme-selector {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 10px;
+}
+.theme-btn {
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.theme-btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.theme-btn.active, .theme-btn:hover {
+  border: 2px solid #667eea;
+  box-shadow: 0 4px 12px rgba(102,126,234,0.15);
+}
+
+/* Black & White Theme */
+.theme-bw {
+  background: #fff !important;
+  color: #111 !important;
+}
+.theme-bw .chat-header,
+.theme-bw .poll-notification {
+  background: #111 !important;
+  color: #fff !important;
+}
+.theme-bw .chat-content, .theme-bw .chat-sidebar {
+  background: #fff !important;
+  color: #111 !important;
+}
+.theme-bw .message-content,
+.theme-bw .private-chat .message-content,
+.theme-bw .channel-chat .message-content {
+  background: #fff !important;
+  color: #111 !important;
+  border: 1px solid #111;
+}
+.theme-bw .message.own .message-content {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+/* Red & White Theme */
+.theme-red {
+  background: #fff !important;
+  color: #b71c1c !important;
+}
+.theme-red .chat-header,
+.theme-red .poll-notification {
+  background: #b71c1c !important;
+  color: #fff !important;
+}
+.theme-red .chat-content, .theme-red .chat-sidebar {
+  background: #fff !important;
+  color: #b71c1c !important;
+}
+.theme-red .message-content,
+.theme-red .private-chat .message-content,
+.theme-red .channel-chat .message-content {
+  background: #fff !important;
+  color: #b71c1c !important;
+  border: 1px solid #b71c1c;
+}
+.theme-red .message.own .message-content {
+  background: #b71c1c !important;
+  color: #fff !important;
+}
+
+/* Dark with red/blue bubbles */
+.theme-dark {
+  background: #181a20 !important;
+  color: #fff !important;
+}
+.theme-dark .chat-header,
+.theme-dark .poll-notification {
+  background: #23263a !important;
+  color: #fff !important;
+}
+.theme-dark .chat-content, .theme-dark .chat-sidebar {
+  background: #181a20 !important;
+  color: #fff !important;
+}
+.theme-dark .message-content,
+.theme-dark .private-chat .message-content,
+.theme-dark .channel-chat .message-content {
+  background: #23263a !important;
+  color: #fff !important;
+  border: 1px solid #23263a;
+}
+.theme-dark .message.own .message-content {
+  background: linear-gradient(135deg, #e53935 0%, #1e88e5 100%) !important;
+  color: #fff !important;
+}
+.theme-dark .message.other .message-content {
+  background: #23263a !important;
+  color: #fff !important;
+}
+
+/* Migliora contrasto input nei temi scuri */
+.theme-dark .message-input, .theme-dark .input-wrapper {
+  background: #23263a !important;
+  color: #fff !important;
+}
+.theme-dark .message-input::placeholder {
+  color: #bbb !important;
+}
+
+/* Sfondo dinamico pagina in base al tema */
+.theme-bw body, body.theme-bw {
+  background: #fff !important;
+}
+.theme-red body, body.theme-red {
+  background: #fff5f5 !important;
+}
+.theme-dark body, body.theme-dark {
+  background: #10121a !important;
 } 
