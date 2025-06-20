@@ -150,7 +150,6 @@ io.on('connection', (socket) => {
       // Incrementa il contatore delle domande se il messaggio viene dallo studente
       if (session.student === user.username) {
         session.questionCount++;
-        
         // Se è l'ultima domanda, attiva il sondaggio per lo studente
         if (session.questionCount >= session.maxQuestions) {
           const studentSocket = io.sockets.sockets.get(recipient.id);
@@ -161,8 +160,10 @@ io.on('connection', (socket) => {
           }
         }
       }
-      
-      // Aggiungi sessionId al messaggio per il tracking
+      // Aggiungi sessionId al messaggio per il tracking (sia docente che studente)
+      message.sessionId = sessionId;
+    } else if (session && session.isActive && !session.isBotMode) {
+      // Aggiungi sessionId al messaggio per il tracking (sia docente che studente)
       message.sessionId = sessionId;
     } else if (session && session.isActive && session.isBotMode) {
       // È una sessione bot in modalità automatica, aggiungi sessionId
@@ -201,11 +202,18 @@ io.on('connection', (socket) => {
     if (studentSocket) {
       studentSocket.emit('botActivated', {
         teacher: teacher.username,
-        sessionId
+        student: student.username,
+        sessionId,
+        isBotMode: data.isBotMode || false
       });
     }
 
-    socket.emit('botActivated', { sessionId });
+    socket.emit('botActivated', { 
+      teacher: teacher.username,
+      student: student.username,
+      sessionId,
+      isBotMode: data.isBotMode || false
+    });
   });
 
   // Messaggio al bot o chat privata

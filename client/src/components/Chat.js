@@ -114,7 +114,17 @@ const Chat = ({ user, socket, onLogout }) => {
     // Gestione bot
     socket.on('botActivated', (data) => {
       setBotSession(data);
-      setActiveTab('bot');
+      if (user.role === 'teacher' && data.isBotMode === false) {
+        setSelectedUser(data.student);
+        setActiveTab('private');
+        socket.emit('getPrivateMessages', data.student);
+      } else if (user.role === 'student' && data.isBotMode === false) {
+        setSelectedUser(data.teacher);
+        setActiveTab('private');
+        socket.emit('getPrivateMessages', data.teacher);
+      } else {
+        setActiveTab('bot');
+      }
     });
 
     socket.on('botResponse', (message) => {
@@ -252,6 +262,8 @@ const Chat = ({ user, socket, onLogout }) => {
             onSendMessage={handlePrivateMessage}
             selectedUser={selectedUser}
             user={user}
+            botSession={botSession}
+            socket={socket}
           />
         );
       case 'bot':
@@ -363,7 +375,9 @@ const Chat = ({ user, socket, onLogout }) => {
                 disabled={!selectedUser}
               >
                 <MessageSquare size={16} />
-                Chat Privata
+                {(user.role === 'student' && botSession && botSession.isBotMode === false && activeTab === 'private')
+                  ? `Docente: ${botSession.teacher}`
+                  : 'Chat Privata'}
                 {selectedUser && <span className="tab-user">({selectedUser})</span>}
               </button>
             )}
