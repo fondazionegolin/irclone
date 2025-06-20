@@ -20,6 +20,7 @@ const Chat = ({ user, socket, onLogout }) => {
   const [newPollResults, setNewPollResults] = useState(0);
   const [showPollNotification, setShowPollNotification] = useState(false);
   const [lastPollResult, setLastPollResult] = useState(null);
+  const [botPollSubmitted, setBotPollSubmitted] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -142,6 +143,13 @@ const Chat = ({ user, socket, onLogout }) => {
     socket.on('pollCompleted', (result) => {
       setPollResults(prev => [...prev, result]);
       
+      // Se lo studente ha appena votato nella bot chat, chiudi la sessione bot
+      if (user.role === 'student' && botSession && result.sessionId === botSession.sessionId) {
+        setBotPollSubmitted(true);
+        setBotSession(null);
+        if (activeTab === 'bot') setActiveTab('channel');
+      }
+      
       // Notifica il docente se è online
       if (user.role === 'teacher') {
         // Incrementa contatore nuovi risultati
@@ -245,6 +253,12 @@ const Chat = ({ user, socket, onLogout }) => {
     }
   };
 
+  const handleBotPollSubmitted = () => {
+    setBotPollSubmitted(true);
+    setBotSession(null);
+    if (activeTab === 'bot') setActiveTab('channel');
+  };
+
   const getActiveTabContent = () => {
     switch (activeTab) {
       case 'channel':
@@ -274,6 +288,7 @@ const Chat = ({ user, socket, onLogout }) => {
             botSession={botSession}
             user={user}
             socket={socket}
+            onPollSubmitted={handleBotPollSubmitted}
           />
         );
       case 'poll-results':
@@ -396,7 +411,7 @@ const Chat = ({ user, socket, onLogout }) => {
               </button>
             )}
             
-            {botSession && (
+            {botSession && !botPollSubmitted && (
               <button
                 className={`tab ${activeTab === 'bot' ? 'active' : ''}`}
                 onClick={() => setActiveTab('bot')}

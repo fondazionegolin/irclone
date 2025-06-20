@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, MessageSquare, AlertCircle, CheckCircle } from 'lucide-react';
 import './BotChat.css';
 
-const BotChat = ({ messages, onSendMessage, botSession, user, socket }) => {
+const BotChat = ({ messages, onSendMessage, botSession, user, socket, onPollSubmitted }) => {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showPoll, setShowPoll] = useState(false);
@@ -43,6 +43,12 @@ const BotChat = ({ messages, onSendMessage, botSession, user, socket }) => {
       };
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (pollSubmitted && typeof onPollSubmitted === 'function') {
+      onPollSubmitted();
+    }
+  }, [pollSubmitted, onPollSubmitted]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
